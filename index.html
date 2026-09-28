@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>옷입히기</title>
+
+	<style>
+	html, body{
+		margin: 0;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	#wrap{
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		height: 100dvh;
+		overflow: hidden;
+	}
+
+	#wrap img{
+		position: absolute;}
+
+	#캐릭터{ left: 25%; top: 0%; width: 50%; z-index: 5; }
+	#배경  { left: 0%; top: -5%; width: 100%; z-index: 1; }
+
+	#옷장  { left: -3%; top: 30%; width: 30%; z-index: 2; }
+	#옷장1  { left: 23%; top: 30%; width: 30%; z-index: 2; }
+	#옷장2 { left: 49%; top: 30%; width: 30%; z-index: 2; }
+	#옷장3  { left: 73%; top: 30%; width: 30%; z-index: 2; }
+
+	#옷  { left: 5.5%;  top: 38%; width: 12%;  z-index: 10; cursor: grab; }
+	#옷1 { left: 31.6%; top: 40%; width: 12%;  z-index: 10; cursor: grab; }
+	#옷2 { left: 58.5%; top: 42%; width: 10%; z-index: 10; cursor: grab; }
+	#옷3 { left: 81.6%; top: 38%; width: 12%;  z-index: 10; cursor: grab; }
+
+
+	#titleBar{
+		position: absolute;
+		top: 20px;
+		left: 0;
+		width: 100%;
+		text-align: center;
+		z-index: 30;
+	}
+	#titleBar h1{
+		margin: 0;
+		font-size: 4rem;
+		color: white;
+	}
+	#titleBar input, #titleBar button{
+		vertical-align: middle;
+	}
+
+	.슬라이더칸{
+	position: absolute;
+	top: 82%;
+	width: 16%;
+	padding: 6px 8px;
+	border-radius: 8px;
+	z-index: 30;
+	box-sizing: border-box;}
+
+	.슬라이더칸 input{
+	width: 100%;
+	margin: 4px 0 0;}
+
+	#칸1{ left: 4%; }
+	#칸2{ left: 29%; }
+	#칸3{ left: 56.1%; }
+	#칸4{ left: 80%; }
+
+	</style>
+</head>
+
+
+<body>
+	<div id="wrap">
+		<img src="배경.jpg" id="배경">
+
+		<div id="titleBar">
+			<h1 id="myMonitor">@@이 옷 입히기</h1><br>
+			<input type="text" id="myText">
+			<button id="myOkay">확인</button>
+			<input type="color" id="fontColor">
+		</div>
+
+		<img src="옷장.png" id="옷장">
+		<img src="옷장.png" id="옷장1">
+		<img src="옷장.png" id="옷장2">
+		<img src="옷장.png" id="옷장3">
+
+		<img src="캐릭터.png" id="캐릭터">
+		<img src="옷.png" id="옷">
+		<img src="옷1.png" id="옷1">
+		<img src="옷2.png" id="옷2">
+		<img src="옷3.png" id="옷3">
+	</div>
+
+	<div class="슬라이더칸" id="칸1">
+	<input type="range" id="옷색" min="0" max="360" value="0">
+	</div>
+	<div class="슬라이더칸" id="칸2">
+	<input type="range" id="옷1색" min="0" max="360" value="0">
+	</div>
+	<div class="슬라이더칸" id="칸3">
+	<input type="range" id="옷2색" min="0" max="360" value="0">
+	</div>
+	<div class="슬라이더칸" id="칸4">
+	<input type="range" id="옷3색" min="0" max="360" value="0">
+	</div>
+
+
+
+<script>
+	myOkay.onclick = function(){
+		myMonitor.innerHTML = myText.value;
+	}
+	myText.oninput = function(){
+		myMonitor.innerHTML = myText.value;
+	}
+	fontColor.oninput = function(){
+		myMonitor.style.color = fontColor.value;
+	}
+
+
+	옷색.oninput = function(){
+		옷.style.filter = "hue-rotate(" + 옷색.value + "deg)";
+	}
+	옷1색.oninput = function(){
+		옷1.style.filter = "hue-rotate(" + 옷1색.value + "deg)";
+	}
+	옷2색.oninput = function(){
+		옷2.style.filter = "hue-rotate(" + 옷2색.value + "deg)";
+	}
+	옷3색.oninput = function(){
+		옷3.style.filter = "hue-rotate(" + 옷3색.value + "deg)";
+	}
+
+
+
+	var nowItem = null;
+	var gapX = 0;
+	var gapY = 0;
+	var topZ = 10;
+
+	function grab(item, e){
+		nowItem = item;
+		gapX = e.clientX - item.offsetLeft;
+		gapY = e.clientY - item.offsetTop;
+		topZ = topZ + 1;
+		item.style.zIndex = topZ;
+	}
+
+	옷.onmousedown = function(e){ grab(옷, e); }
+	옷1.onmousedown = function(e){ grab(옷1, e); }
+	옷2.onmousedown = function(e){ grab(옷2, e); }
+	옷3.onmousedown = function(e){ grab(옷3, e); }
+
+	document.onmousemove = function(e){
+		if(nowItem != null){
+			nowItem.style.left = (e.clientX - gapX) + "px";
+			nowItem.style.top = (e.clientY - gapY) + "px";
+		}
+	}
+
+	document.onmouseup = function(){
+		nowItem = null;
+	}
+
+	옷.ondragstart = function(){ return false; }
+	옷1.ondragstart = function(){ return false; }
+	옷2.ondragstart = function(){ return false; }
+	옷3.ondragstart = function(){ return false; }
+</script>
+
+</body>
+</html>
